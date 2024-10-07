@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at Etherscan.io on 2023-12-01
-*/
-
 // SPDX-License-Identifier: GPL-3.0
 
 // Contracts are written by @Dexaran (twitter.com/Dexaran github.com/Dexaran)
@@ -54,10 +50,16 @@ contract D223Upgrading
         // Only allow deposits of legacy D223 tokens by users
         // or deposit of the new D223 tokens by the creator of the contract.
         // Otherwise revert the tx.
-        require(msg.sender == d223_old || (msg.sender == d223_new && _from == creator), "Wrong token");
-
-        // Send equal amount of new D223 tokens to the sender of the original D223 tokens.
-        IERC223(d223_new).transfer(_from, _amount);
+        if(msg.sender == d223_new)
+        {
+            require( _from == creator);
+        }
+        else 
+        {
+            require(msg.sender == d223_old, "Wrong token");
+            // Send equal amount of new D223 tokens to the sender of the original D223 tokens.
+            IERC223(d223_new).transfer(_from, _amount);
+        }
 
         // Store the original D223 tokens on the address of the contract permanently.
         // These will not be extractable.
